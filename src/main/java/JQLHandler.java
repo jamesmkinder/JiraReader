@@ -5,6 +5,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityExistsException;
 import org.hibernate.Session;
 import org.json.JSONArray;
@@ -65,7 +66,7 @@ public class JQLHandler
     public static HttpResponse<JsonNode> getPage(int start, String jql, String expand) throws UnirestException {
 
         return Unirest.get("https://extron.atlassian.net/rest/api/2/search")
-                .basicAuth("jkinder@extron.com", "cmTvpvaP4iUTfTVp0Xc33090")
+                .basicAuth("jkinder@extron.com", Dotenv.configure().load().get("TOKEN"))
                 .header("Accept", "application/json")
                 .queryString("jql", jql)
                 .queryString("maxResults", 100)
