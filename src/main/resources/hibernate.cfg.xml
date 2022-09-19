@@ -14,7 +14,7 @@
     <session-factory>
 
         <!-- Database connection settings -->
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
 
         <!-- 3306 is default port number for mysql -->
         <property name="connection.url">jdbc:mysql://localhost:3306/jira</property>
