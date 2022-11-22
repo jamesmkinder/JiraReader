@@ -10,7 +10,7 @@ public class Main {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        JQLHandler.handleJQL("type = 'tech sheet bug' and (status != closed or created > -240d)", session);
+        JQLHandler.handleJQL("type = 'tech sheet bug' and (status != closed or created > -30d)", session);
         session.close();
         JOptionPane.showMessageDialog(null, "Task completed", "Success", JOptionPane.INFORMATION_MESSAGE);
         System.exit(0);
