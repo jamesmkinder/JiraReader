@@ -4,8 +4,19 @@ import org.codehaus.jettison.json.JSONObject;
 
 import java.util.*;
 
+/**
+ * Currently unused utility class to help with transforming JSON data that the GCP export tool produces.
+ * Will probably deprecate in favor of GSON library.
+ */
+
 public class JSONHelpers {
 
+    /**
+     * The main method to parse the GCP export tool JSON file.
+     * @param json The GCP export tool JSON string.
+     * @return A list of mappings of the JSON key-value pairs.
+     * @throws JSONException
+     */
     public static List<Map<String, String>> getJSONValues(JSONObject json) throws JSONException {
         List<Map<String, String>> solution = new ArrayList<>();
 
@@ -31,6 +42,12 @@ public class JSONHelpers {
         return solution;
     }
 
+    /**
+     * Recursively transforms a JSON object into a mapping of key-value pairs.
+     * @param jsonObject The JSON object.
+     * @param target The Map object being loaded.
+     * @throws JSONException
+     */
     public static void parse(JSONObject jsonObject, Map<String, String> target) throws JSONException {
         Iterator<String> keys = jsonObject.keys();
         while (keys.hasNext()) {
@@ -43,6 +60,13 @@ public class JSONHelpers {
             }
         }
     }
+
+    /**
+     * Recursively transforms a JSON array into a mapping of key-value pairs.
+     * @param jsonArray The JSON array.
+     * @param target The Map object being loaded.
+     * @throws JSONException
+     */
     public static void parseArray(JSONArray jsonArray, Map<String, String> target) throws JSONException {
 
         for (int i = 0; i < jsonArray.length(); i++) {

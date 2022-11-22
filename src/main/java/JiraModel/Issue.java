@@ -5,6 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Model class to represent a Jira issue.
+ */
+
 @Entity
 @Table(name = "issue")
 public class Issue {
@@ -27,23 +31,12 @@ public class Issue {
         return self;
     }
 
-    public void setSelf(String self) {
-        this.self = self;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
 }

@@ -19,9 +19,21 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JQLHandler
-{
+/**
+ * Takes a JQL string and Hibernate session, queries the Jira API, then persists the resulting data into the session
+ * database.
+ */
 
+public class JQLHandler {
+
+    /**
+     * Takes a JQL string and Hibernate session, queries the Jira API, then persists the resulting data into the session
+     * database.
+     * @param jql The JQL query.
+     * @param session The Hibernate session.
+     * @throws UnirestException
+     * @throws ParseException
+     */
     public static void handleJQL(String jql, Session session) throws UnirestException, ParseException {
         JSONObject valueNames = getPage(0, jql, "schema, names").getBody().getObject().getJSONObject("names");
         Map<String, String> valueMap = new HashMap<>();
@@ -62,6 +74,16 @@ public class JQLHandler
         }
     }
 
+    /**
+     * Helper method that queries the Jira API with a GET request, and returns an HttpResponse with a maximum of
+     * 100 tickets.
+     * @param start Offset for the result set.  A start of 0 will return the first 100 tickets, a start of 100 will return
+     *              the second 100 tickets, etc.
+     * @param jql The JQL query.
+     * @param expand Any extra related data objects that should be included in the search results, e.g. changelogs.
+     * @return An HttpResponse with the resulting JSON.
+     * @throws UnirestException
+     */
 
     public static HttpResponse<JsonNode> getPage(int start, String jql, String expand) throws UnirestException {
 
@@ -75,6 +97,13 @@ public class JQLHandler
                 .asJson();
     }
 
+    /**
+     * Adds the changelogs JSON object to the database with the associated issue primary key.
+     * @param issueId The primary key ID of the related issue.
+     * @param changelogs The changelogs JSON object
+     * @param session The Hibernate session.
+     * @throws ParseException
+     */
     public static void addChangelogs(int issueId, JSONObject changelogs, Session session) throws ParseException {
         JSONArray histories = changelogs.getJSONArray("histories");
 
@@ -97,6 +126,14 @@ public class JQLHandler
         }
     }
 
+    /**
+     * Recursively adds the values JSON object to the database with the associated issue primary key.
+     * @param issueId The primary key ID of the related issue.
+     * @param values The values JSON object.
+     * @param valueMap A mapping of custom value IDs to human-readable values.
+     * @param session The Hibernate session.
+     * @param parentName The value of the parent JSON object in the case of nested JSON values, blank otherwise.
+     */
     public static void addValues(int issueId, JSONObject values, Map<String,String> valueMap, Session session, String parentName) {
         values.keySet().forEach(keyStr -> {
             if (values.get(keyStr) == JSONObject.NULL) return;

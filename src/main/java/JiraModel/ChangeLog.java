@@ -6,6 +6,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.sql.Timestamp;
+
+/**
+ * Model class to represent an issue's changelog.
+ */
+
 @Entity
 @Table(name = "changelog")
 public class ChangeLog {

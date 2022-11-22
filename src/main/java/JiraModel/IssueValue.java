@@ -2,6 +2,10 @@ package JiraModel;
 
 import jakarta.persistence.*;
 
+/**
+ * Model class to represent an issue's fields.
+ */
+
 @Entity
 @Table(name = "issue_value")
 public class IssueValue {
