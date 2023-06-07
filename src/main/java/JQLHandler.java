@@ -35,7 +35,8 @@ public class JQLHandler {
      * @throws ParseException
      */
     public static void handleJQL(String jql, Session session) throws UnirestException, ParseException {
-        JSONObject valueNames = getPage(0, jql, "schema, names").getBody().getObject().getJSONObject("names");
+        JSONObject node = getPage(0, 1, jql, "schema, names").getBody().getObject();
+        JSONObject valueNames = node.getJSONObject("names");
         Map<String, String> valueMap = new HashMap<>();
         valueNames.keySet().forEach(keyStr ->
         {
@@ -43,15 +44,18 @@ public class JQLHandler {
             valueMap.put(keyStr, keyValue);
         });
 
-        int total = (int) getPage(0, jql, "").getBody().getObject().get("total");
+        int total = (int) node.get("total");
         int resultSize = 1;
         System.out.println("Total = " + total);
         for (int i = 0; i < total; i += resultSize) {
             JSONObject page;
-            try {
-                page = getPage(i, jql, "changelog").getBody().getObject();
-            } catch (UnirestException e) {
-                continue;
+            while(true){
+                try {
+                    page = getPage(i, 100, jql, "changelog").getBody().getObject();
+                    break;
+                } catch (UnirestException e) {
+                    System.out.println("trying again...");
+                }
             }
             resultSize = page.getInt("maxResults");
             JSONArray issues = page.getJSONArray("issues");
@@ -85,11 +89,13 @@ public class JQLHandler {
      * @throws UnirestException
      */
 
-    public static HttpResponse<JsonNode> getPage(int start, String jql, String expand) throws UnirestException {
+    public static HttpResponse<JsonNode> getPage(int start, int max, String jql, String expand) throws UnirestException {
 
+        System.out.println("Sending request..." + start);
         return Unirest.get("https://extron.atlassian.net/rest/api/2/search")
                 .basicAuth("jkinder@extron.com", Dotenv.configure().load().get("TOKEN"))
                 .header("Accept", "application/json")
+                .header("Timeout", "30000")
                 .queryString("jql", jql)
                 .queryString("maxResults", 100)
                 .queryString("startAt", start)

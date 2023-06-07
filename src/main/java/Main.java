@@ -14,7 +14,7 @@ public class Main {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        JQLHandler.handleJQL("type = 'tech sheet bug' and (status != closed or created > -500d)", session);
+        JQLHandler.handleJQL("type = 'tech sheet bug' and (status != closed or created > -455d) and project not in (ZZTEST, XTSPR, XTPCF)", session);
         session.close();
         System.exit(0);
     }
