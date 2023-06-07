@@ -16,6 +16,7 @@ public class Main {
         session.beginTransaction();
         JQLHandler.handleJQL("type = 'tech sheet bug' and (status != closed or created > -455d) and project not in (ZZTEST, XTSPR, XTPCF)", session);
         session.close();
+        JOptionPane.showMessageDialog(null, "Task completed", "Success", JOptionPane.INFORMATION_MESSAGE);
         System.exit(0);
     }
 }
